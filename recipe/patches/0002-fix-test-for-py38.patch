@@ -1,0 +1,36 @@
+From 944abc90b2a3158df153399ee5f27377ca34808d Mon Sep 17 00:00:00 2001
+From: Lorenzo Pirritano <lpirritano@anaconda.com>
+Date: Fri, 30 Aug 2024 16:17:10 +0200
+Subject: [PATCH 2/2] fix test for py38
+
+---
+ _test_unstructured_client/unit/test_split_pdf_hook.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/_test_unstructured_client/unit/test_split_pdf_hook.py b/_test_unstructured_client/unit/test_split_pdf_hook.py
+index d62b8b5..00afa99 100644
+--- a/_test_unstructured_client/unit/test_split_pdf_hook.py
++++ b/_test_unstructured_client/unit/test_split_pdf_hook.py
+@@ -3,7 +3,7 @@ import io
+ import logging
+ from asyncio import Task
+ from collections import Counter
+-from typing import Coroutine
++from typing import Coroutine, List
+ 
+ import pytest
+ import requests
+@@ -491,8 +491,8 @@ async def _request_mock(fails: bool, content: str) -> requests.Response:
+ @pytest.mark.asyncio
+ async def test_unit_disallow_failed_coroutines(
+         allow_failed: bool,
+-        tasks: list[Task],
+-        expected_responses: list[str],
++        tasks: List[Task],
++        expected_responses: List[str],
+ ):
+     """Test disallow failed coroutines method properly sets the flag to False."""
+     responses = await run_tasks(tasks, allow_failed=allow_failed)
+-- 
+2.39.1
+
