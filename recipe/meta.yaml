@@ -10,8 +10,7 @@ source:
     sha256: adb97ea56ce65f8b277d5b05f093e9d13a3320ac8dea7265ffa71f5e13ed5f84
     patches:
       - patches/0001-fix-python-38.patch  # [py==38]
-  - url: https://raw.githubusercontent.com/Unstructured-IO/unstructured-python-client/v{{ version }}/_test_unstructured_client/unit/test_split_pdf_hook.py
-    sha256: 1026e9fd784287e9d0a395d2f82ff856d4523a016da26be04bf473e0b9ff45b0
+  # us GH release for tests and tests data files
   - url: https://github.com/Unstructured-IO/unstructured-python-client/archive/refs/tags/v{{ version }}.tar.gz
     sha256: 8be7c5b83baae8c61b9ff389f02f4123a6558047c6fbefd6b3f38f850486d032
     folder: gh_src
@@ -78,6 +77,7 @@ test:
   commands:
     - pip check
     - cd gh_src/
+    # requests-mock not available for py312
     - pytest _test_unstructured_client/unit -v  # [py<312]
     - pytest _test_unstructured_client/unit/test_split_pdf_hook.py -v  # [py>=312]
 
