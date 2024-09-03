@@ -82,7 +82,7 @@ test:
     - pytest _test_unstructured_client/unit/test_split_pdf_hook.py -v  # [py>=312]
 
 about:
-  home: https://github.com/Unstructured-IO/unstructured-python-client
+  home: https://docs.unstructured.io/api-reference/api-services/overview
   license: MIT
   license_file: LICENSE.md
   license_family: MIT
@@ -91,7 +91,7 @@ about:
     Unstructured provides a platform and tools to ingest and process
     unstructured documents for Retrieval Augmented Generation (RAG)
     and model fine-tuning.
-  doc_url: https://docs.unstructured.io/welcome
+  doc_url: https://docs.unstructured.io/api-reference/api-services/sdk-python
   dev_url: https://github.com/Unstructured-IO/unstructured-python-client
 
 extra:
