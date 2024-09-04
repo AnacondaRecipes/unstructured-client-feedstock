@@ -6,23 +6,38 @@ package:
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/unstructured-client-{{ version }}.tar.gz
-  sha256: adb97ea56ce65f8b277d5b05f093e9d13a3320ac8dea7265ffa71f5e13ed5f84
+  - url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+    sha256: adb97ea56ce65f8b277d5b05f093e9d13a3320ac8dea7265ffa71f5e13ed5f84
+    patches:
+      - patches/0001-fix-python-38.patch  # [py==38]
+  # us GH release for tests and tests data files
+  - url: https://github.com/Unstructured-IO/unstructured-python-client/archive/refs/tags/v{{ version }}.tar.gz
+    sha256: 8be7c5b83baae8c61b9ff389f02f4123a6558047c6fbefd6b3f38f850486d032
+    folder: gh_src
+    patches:
+      - patches/0001-fix-test-module-path.patch
+      - patches/0002-fix-test-for-py38.patch  # [py==38]
 
 build:
-  noarch: python
-  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   number: 0
+  # skip s390x: httpx and deepdiff not available
+  skip: true  # [py<38 or s390x]
+  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
 
 requirements:
+  build:
+    - patch     # [not win]
+    - m2-patch  # [win]
   host:
-    - python >=3.8
+    - python
     - pip
+    - setuptools
+    - wheel
   run:
+    - python
     - httpx >=0.27.0
     - nest-asyncio >=1.6.0
     - requests-toolbelt >=1.0.0
-    - python >=3.8
     - certifi >=2023.7.22
     - charset-normalizer >=3.2.0
     - dataclasses-json >=0.6.4
@@ -43,16 +58,41 @@ requirements:
 test:
   imports:
     - unstructured_client
-  commands:
-    - pip check
+  source_files:
+    - gh_src/_test_unstructured_client
+    - gh_src/_sample_docs/*
+    - gh_src/README.md
   requires:
     - pip
+    - pytest
+    - pytest-asyncio
+    - pytest-mock
+    # requests-mock not available for py312
+    - requests-mock  # [py<312]
+    - requests-toolbelt
+    # not used by the unit tests
+    # - pypdf
+    # - deepdiff
+    # - uvloop
+  commands:
+    - pip check
+    - cd gh_src/
+    # requests-mock not available for py312
+    - pytest _test_unstructured_client/unit -v  # [py<312]
+    - pytest _test_unstructured_client/unit/test_split_pdf_hook.py -v  # [py>=312]
 
 about:
-  summary: Python Client SDK for Unstructured API
-  home: https://github.com/Unstructured-IO/unstructured-python-client
+  home: https://docs.unstructured.io/api-reference/api-services/overview
   license: MIT
   license_file: LICENSE.md
+  license_family: MIT
+  summary: Python Client SDK for Unstructured API
+  description: |
+    Unstructured provides a platform and tools to ingest and process
+    unstructured documents for Retrieval Augmented Generation (RAG)
+    and model fine-tuning.
+  doc_url: https://docs.unstructured.io/api-reference/api-services/sdk-python
+  dev_url: https://github.com/Unstructured-IO/unstructured-python-client
 
 extra:
   recipe-maintainers:

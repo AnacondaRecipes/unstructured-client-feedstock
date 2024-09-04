@@ -1,0 +1,31 @@
+From 94f6c93731f3a127993d63ab8dc6064391e36e4b Mon Sep 17 00:00:00 2001
+From: Erick Friis <erickfriis@gmail.com>
+Date: Wed, 24 Jul 2024 14:53:23 -0700
+Subject: [PATCH] Example python 3.8 compatibility fix
+
+---
+ src/unstructured_client/_hooks/custom/form_utils.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/unstructured_client/_hooks/custom/form_utils.py b/src/unstructured_client/_hooks/custom/form_utils.py
+index b04f5d8..6a4b6ba 100644
+--- a/src/unstructured_client/_hooks/custom/form_utils.py
++++ b/src/unstructured_client/_hooks/custom/form_utils.py
+@@ -1,7 +1,7 @@
+ from __future__ import annotations
+ 
+ import logging
+-from typing import Union
++from typing import Dict, List, Union
+ 
+ from requests_toolbelt.multipart.decoder import MultipartDecoder
+ 
+@@ -9,7 +9,7 @@
+ from unstructured_client.models import shared
+ 
+ logger = logging.getLogger(UNSTRUCTURED_CLIENT_LOGGER_NAME)
+-FormData = dict[str, Union[str, shared.Files, list[str]]]
++FormData = Dict[str, Union[str, shared.Files, List[str]]]
+ 
+ PARTITION_FORM_FILES_KEY = "files"
+ PARTITION_FORM_SPLIT_PDF_PAGE_KEY = "split_pdf_page"
