@@ -19,15 +19,12 @@ source:
       - patches/0002-fix-test-for-py38.patch  # [py==38]
 
 build:
-  number: 0
+  number: 1
   # skip s390x: httpx and deepdiff not available
   skip: true  # [py<38 or s390x]
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
 
 requirements:
-  build:
-    - patch     # [not win]
-    - m2-patch  # [win]
   host:
     - python
     - pip
